@@ -93,7 +93,7 @@ void NSProtocolSerializeNSGamepadData (tNSGamepad nsGamepad, uint8_t buffer [NS_
  
   // Cargamos los valores por defecto del report
   // (este paso nos lo podemos saltar cuando tengamos hecho el siguiente!)
-  NSProtocolReportDataSetDefaultValues (&NSGamepadReportData);
+  NSProtocolReportDataSetDefaultValues (&NSGamepadReportData);  //!esta en la clase nstypes
 
   // Pasamos de nsGamepad (tipo tNSGamepad) a tNSGamepadReportData
   NSProtocolButtonsToBytes (nsGamepad, &NSGamepadReportData.buttons);
@@ -106,6 +106,12 @@ void NSProtocolSerializeNSGamepadData (tNSGamepad nsGamepad, uint8_t buffer [NS_
   // TO DO: NO usar memcpy para la estructura completa (puede fallar si la estructura contiene "padding"),
   // hacerlo a mano: un memcpy para cada campo de la estructura, uno a uno, en el mismo orden en que
   // estan definidos en ella (que es el orden que establece el protocolo de la Nintendo Switch).
-  memcpy(buffer, &NSGamepadReportData, NS_GAMEPAD_REPORT_SIZE);
+  //*memcpy(buffer, &NSGamepadReportData, NS_GAMEPAD_REPORT_SIZE);
+
+  
 
 }
+
+
+
+
