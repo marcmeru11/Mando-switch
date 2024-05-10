@@ -27,6 +27,7 @@ void NSProtocolDPadButtonsToByte(int up, int down, int left, int right, uint8_t*
     if(left){
 
     }else if(right){
+       *byte=NSGAMEPAD_DPAD_UP;
 
     }else{
       *byte=NSGAMEPAD_DPAD_UP;
