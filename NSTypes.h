@@ -96,7 +96,7 @@ typedef struct
 
 typedef enum
 {
-  NOT_PRESSED = 0, PRESSED
+  NOT_PRESSED = 0, PRESSED=1
 } tNSButtonState;
 
 typedef enum
@@ -131,25 +131,6 @@ typedef struct
   //! TENGO LA TEORIA DE QUE ESTO HACE REFERENCIA A LA CLASE NSGAMEPAD.C
   //! LO QUE HACE ESO ES CAMBIAR EL VALOR DE LA ESTRUCTURA DEFINIDA ARRIBA Y PONERLO A PRESET
   //! POR LO QUE NO SERIA RARO PENSAR QUE HAY QUE HACER LO MISMO PARA TODOS LOS BOTONES
-  tNSButtonState buttonsPressed[RIGHT];
-  tNSButtonState buttonsPressed[LEFT];
-  tNSButtonState buttonsPressed[DOWN];
-  tNSButtonState buttonsPressed[UP];
-  tNSButtonState buttonsPressed[CAPTURE];
-  tNSButtonState buttonsPressed[HOME];
-  tNSButtonState buttonsPressed[RIGHT_STICK];
-  tNSButtonState buttonsPressed[LEFT_STICK];
-  tNSButtonState buttonsPressed[PLUS];
-  tNSButtonState buttonsPressed[MINUS];
-  tNSButtonState buttonsPressed[RIGHT_THROTTLE];
-  tNSButtonState buttonsPressed[LEFT_THROTTLE];
-  tNSButtonState buttonsPressed[RIGHT_TRIGGER];
-  tNSButtonState buttonsPressed[LEFT_TRIGGER];
-  tNSButtonState buttonsPressed[X];
-  tNSButtonState buttonsPressed[A];
-  tNSButtonState buttonsPressed[B];
-  tNSButtonState buttonsPressed[Y];
-
   // Definir el resto de campos utiles
 
 } tNSGamepad;

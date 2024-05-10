@@ -22,6 +22,27 @@ void NSProtocolDPadButtonsToByte(int up, int down, int left, int right, uint8_t*
 
   // TO DO
 
+  if(up && !down){
+
+    if(left){
+
+    }else if(right){
+
+    }else{
+      *byte=NSGAMEPAD_DPAD_UP;
+    }
+
+
+
+  }else if(down && !up ){
+
+  }else if(right && !left){
+
+  }else if (left && !right){
+
+  }else{
+      *byte=NSGAMEPAD_DPAD_CENTERED;
+  }
 
 
 
@@ -68,6 +89,13 @@ void NSProtocolButtonsToBytes (tNSGamepad nsGamepad,  uint16_t* twoBytes) {
   // TO DO: Hacer el resto! 
   // (Requiere uso de mascaras / desplazamientos logicos)
   // ¿Se puede generalizar usando un bucle?
+
+  int i;
+  for (i = 0; i < UP; i++) {
+       *twoBytes = *twoBytes | (uint16_t) nsGamepad.buttonsPressed[i] << i;
+
+  }
+  //!ns si está bien 
 
 
 
