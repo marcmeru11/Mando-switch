@@ -118,8 +118,11 @@ void NSProtocolReportDataSetButtons(tNSGamepad nsGamepad, tNSGamepadReportData *
 
 
   NSGamepadReportData->dPad= 0x00;
+  
   //LE PASA EL ESTADO DE LOS BOTONES DEL DPAD, Y LUEGO LE PASA UN PUNTERO A DONDE TIENE QUE ESCRIBIR
-  NSProtocolDPadButtonsToByte(nsGamepad.buttonsPressed[UP] ,nsGamepad.buttonsPressed[DOWN] , nsGamepad.buttonsPressed[LEFT], nsGamepad.buttonsPressed[RIGHT], NSGamepadReportData->dPad);  
+  //NSProtocolDPadButtonsToByte(nsGamepad.buttonsPressed[UP] ,nsGamepad.buttonsPressed[DOWN] , nsGamepad.buttonsPressed[LEFT], nsGamepad.buttonsPressed[RIGHT], *byte);
+
+  
 
 
 
