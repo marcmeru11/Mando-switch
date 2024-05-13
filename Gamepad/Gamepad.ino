@@ -79,7 +79,7 @@ int b_button_pressed, a_button_pressed, y_button_pressed, x_button_pressed;
 int minus_button_pressed, back_button_pressed, plus_button_pressed, home_button_pressed;
 
 // cruceta
-int up_dir_button_pressed, left_dir_button_pressed, right_dir, down_dir_button_pressed;
+int up_dir_button_pressed, left_dir_button_pressed, right_dir_button_pressed, down_dir_button_pressed;
 
 // gatillos
 int back_left_trigger_button_pressed, left_trigger_button_pressed, back_right_trigger_button_pressed, right_trigger_button_pressed;
@@ -134,7 +134,7 @@ void pressButtons(){
     Serial.println("LEFT");
     NSGamepadPressButton(LEFT, &nsGamepad);
   }
-  if(right_dir == LOW){
+  if(right_dir_button_pressed == LOW){
     Serial.println("RIGHT");
     NSGamepadPressButton(RIGHT, &nsGamepad);
   }
@@ -173,9 +173,6 @@ void pressButtons(){
 
 }
 
-
-
-
 void releaseButtons(){
   if(b_button_pressed == HIGH){
     NSGamepadReleaseButton(B, &nsGamepad);
@@ -211,7 +208,7 @@ void releaseButtons(){
   if(left_dir_button_pressed == HIGH){
     NSGamepadReleaseButton(LEFT, &nsGamepad);
   }
-  if(right_dir == HIGH){
+  if(right_dir_button_pressed == HIGH){
     NSGamepadReleaseButton(RIGHT, &nsGamepad);
   }
   if(down_dir_button_pressed == HIGH){
@@ -243,39 +240,38 @@ void releaseButtons(){
   
 }
 
-
 void declarePinModes(){
-  pinMode(B_BUTTON, INPUT);
-  pinMode(A_BUTTON, INPUT);
-  pinMode(Y_BUTTON, INPUT);
-  pinMode(X_BUTTON, INPUT);
+  pinMode(B_BUTTON, INPUT_PULLUP);
+  pinMode(A_BUTTON, INPUT_PULLUP);
+  pinMode(Y_BUTTON, INPUT_PULLUP);
+  pinMode(X_BUTTON, INPUT_PULLUP);
 
   // EXTRAS
-  pinMode(MINUS_BUTTON, INPUT);
-  pinMode(BACK_BUTTON, INPUT);
-  pinMode(PLUS_BUTTON, INPUT);
-  pinMode(HOME_BUTTON, INPUT);
+  pinMode(MINUS_BUTTON, INPUT_PULLUP);
+  pinMode(BACK_BUTTON, INPUT_PULLUP);
+  pinMode(PLUS_BUTTON, INPUT_PULLUP);
+  pinMode(HOME_BUTTON, INPUT_PULLUP);
 
   // cruceta
-  pinMode(UP_DIRECTION_BUTTON, INPUT);
-  pinMode(LEFT_DIRECTION_BUTTON, INPUT);
-  pinMode(RIGHT_DIRECTION_BUTTON, INPUT);
-  pinMode(DOWN_DIRECTION_BUTTON, INPUT);
+  pinMode(UP_DIRECTION_BUTTON, INPUT_PULLUP);
+  pinMode(LEFT_DIRECTION_BUTTON, INPUT_PULLUP);
+  pinMode(RIGHT_DIRECTION_BUTTON, INPUT_PULLUP);
+  pinMode(DOWN_DIRECTION_BUTTON, INPUT_PULLUP);
 
   // gatillos
-  pinMode(BACK_LEFT_TRIGGER_BUTTON, INPUT);
-  pinMode(LEFT_TRIGGER_BUTTON, INPUT);
-  pinMode(BACK_RIGHT_TRIGGER_BUTTON, INPUT);
-  pinMode(RIGHT_TRIGGER_BUTTON, INPUT);
+  pinMode(BACK_LEFT_TRIGGER_BUTTON, INPUT_PULLUP);
+  pinMode(LEFT_TRIGGER_BUTTON, INPUT_PULLUP);
+  pinMode(BACK_RIGHT_TRIGGER_BUTTON, INPUT_PULLUP);
+  pinMode(RIGHT_TRIGGER_BUTTON, INPUT_PULLUP);
 
   // joysticks
-  pinMode(RIGHT_JOYSTICK_Y_AXIS, INPUT);
-  pinMode(RIGHT_JOYSTICK_X_AXIS, INPUT);
-  pinMode(RIGHT_JOYSTICK_BUTTON, INPUT);
+  pinMode(RIGHT_JOYSTICK_Y_AXIS, INPUT_PULLUP);
+  pinMode(RIGHT_JOYSTICK_X_AXIS, INPUT_PULLUP);
+  pinMode(RIGHT_JOYSTICK_BUTTON, INPUT_PULLUP);
 
-  pinMode(LEFT_JOYSTICK_Y_AXIS, INPUT);
-  pinMode(LEFT_JOYSTICK_X_AXIS, INPUT);
-  pinMode(LEFT_JOYSTICK_BUTTON, INPUT);
+  pinMode(LEFT_JOYSTICK_Y_AXIS, INPUT_PULLUP);
+  pinMode(LEFT_JOYSTICK_X_AXIS, INPUT_PULLUP);
+  pinMode(LEFT_JOYSTICK_BUTTON, INPUT_PULLUP);
 }
 
 void handshake()
@@ -311,7 +307,6 @@ void setup()
   declarePinModes();
   esp32USB.begin();
 
-  pinMode(8, INPUT); // TO DO: Borrar esta linea y esa funcion cuando todos los botones esten implementados
   handshake();
 }
 
@@ -327,7 +322,7 @@ void loop()
   // Serializamos los datos contenidos en nsGamepad para su envio
   // TO DO: Hay que completar el codigo de esta funcion
   NSProtocolSerializeNSGamepadData(nsGamepad, buffer);
-  Serial.println(b_button_pressed);
+  
   // Enviamos el contenido del buffer
   esp32USB.write(NS_GAMEPAD_REPORT_SIZE, buffer);
   
@@ -339,7 +334,7 @@ void pressedButtonsDetection(){
   b_button_pressed = digitalRead(B_BUTTON);
   a_button_pressed = digitalRead(A_BUTTON);
   y_button_pressed = digitalRead(Y_BUTTON);
-  x_button_pressed = digitalRead(Y_BUTTON);
+  x_button_pressed = digitalRead(X_BUTTON);
 
   // EXTRAS
   minus_button_pressed = digitalRead(MINUS_BUTTON);
@@ -350,9 +345,9 @@ void pressedButtonsDetection(){
   // cruceta
   up_dir_button_pressed = digitalRead(UP_DIRECTION_BUTTON);
   left_dir_button_pressed = digitalRead(LEFT_DIRECTION_BUTTON);
-  right_dir = digitalRead(RIGHT_DIRECTION_BUTTON);
+  right_dir_button_pressed = digitalRead(RIGHT_DIRECTION_BUTTON);
   down_dir_button_pressed = digitalRead(DOWN_DIRECTION_BUTTON);
-
+  //no detecta abajo
   // gatillos
   back_left_trigger_button_pressed = digitalRead(BACK_LEFT_TRIGGER_BUTTON);
   left_trigger_button_pressed = digitalRead(LEFT_TRIGGER_BUTTON);
@@ -365,7 +360,7 @@ void pressedButtonsDetection(){
 
 
 
-  //pressButtons();
+  pressButtons();
   releaseButtons();
 
 
