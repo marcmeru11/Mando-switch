@@ -22,43 +22,45 @@ void NSProtocolDPadButtonsToByte(int up, int down, int left, int right, uint8_t 
   // Las constantes cuyo valor puede tomar byte estan definidas en NSTypes.h
 
   // TO DO
-  if (up && !down)
+  if (up - down == 0 && right - left == 0)
   {
-
-    if (left)
-    {
-      *byte = NSGAMEPAD_DPAD_UP_LEFT;
-    }
-    else if (right)
-    {
-      *byte = NSGAMEPAD_DPAD_UP_RIGHT;
-    }
-    else
+    *byte = NSGAMEPAD_DPAD_CENTERED;
+  }
+  else if (up - down == 1)
+  {
+    if (left - right == 0) 
     {
       *byte = NSGAMEPAD_DPAD_UP;
     }
-  }
-  else if (down && !up)
-  {
-
-    if (left)
+    else if (left)
     {
-      *byte = NSGAMEPAD_DPAD_DOWN_LEFT;
-    }
-    else if (right)
-    {
-      *byte = NSGAMEPAD_DPAD_DOWN_RIGHT;
+      *byte = NSGAMEPAD_DPAD_UP_LEFT;
     }
     else
     {
-      *byte = NSGAMEPAD_DPAD_DOWN;
+      *byte = NSGAMEPAD_DPAD_UP_RIGHT;
     }
   }
-  else if (right && !left)
+  else if (down - up == 1)
+  {
+    if (left - right == 0)
+    {
+      *byte = NSGAMEPAD_DPAD_DOWN;
+    }
+    else if (left)
+    {
+      *byte = NSGAMEPAD_DPAD_DOWN_LEFT;
+    }
+    else
+    {
+      *byte = NSGAMEPAD_DPAD_DOWN_RIGHT;
+    }
+  }
+  else if (right - left == 1)
   {
     *byte = NSGAMEPAD_DPAD_RIGHT;
   }
-  else if (left && !right)
+  else if (left - right == 1)
   {
     *byte = NSGAMEPAD_DPAD_LEFT;
   }
@@ -90,13 +92,12 @@ void NSProtocolReportDataSetButtons(tNSGamepad nsGamepad, tNSGamepadReportData *
   NSGamepadReportData->actionButtons = 0x00;
   int i;
   // Comenzamos por el primero de ellos, el Y (ver tNSButtons de NSTypes.h)
-  for(i=0; i<ZR; i++){
-
+  for(i=0; i<=ZR; i++){
     NSGamepadReportData->actionButtons = NSGamepadReportData->actionButtons | (uint8_t)nsGamepad.buttonsPressed[i]<<i;
   }
 
 
-  // TO DO: Hacer el resto!
+  // TO DO: Hacer el resto!+
   // (Requiere uso de mascaras / desplazamientos logicos)
   // ¿Se puede generalizar usando un bucle?
 
@@ -106,9 +107,8 @@ void NSProtocolReportDataSetButtons(tNSGamepad nsGamepad, tNSGamepadReportData *
   // Inicializamos a 0
 
   NSGamepadReportData->menuButtons = 0x00;
-  for(i=MINUS; i<ZR; i++){
-
-    NSGamepadReportData->actionButtons = NSGamepadReportData->actionButtons | (uint8_t)nsGamepad.buttonsPressed[i]<<i;
+  for(i=MINUS; i<=PLUS; i++){
+    NSGamepadReportData->menuButtons = NSGamepadReportData->menuButtons | (uint8_t)nsGamepad.buttonsPressed[i]<<i;
   }
 
   // TO DO: Hacerlos todos, igual que hicimos los de accion
@@ -158,7 +158,16 @@ void NSProtocolSerializeNSGamepadData(tNSGamepad nsGamepad, uint8_t buffer[NS_GA
   // Botones de accion y de menu:
   NSProtocolReportDataSetButtons(nsGamepad, &NSGamepadReportData);
   // TO DO: Hacer el resto de campos de NSGamepadReportData!
-
+  /*uint8_t actionButtons;
+  uint8_t menuButtons;
+  uint8_t dPad;
+  uint8_t leftXAxis;
+  uint8_t leftYAxis;
+  uint8_t rightXAxis;
+  uint8_t rightYAxis;
+  uint8_t filler;
+  */
+  //NSProtocolReportDataSetButtons
   // Finalmente, serializamos tHID_NSGamepadReportData (metemos los datos en el buffer).
   // TO DO: NO usar memcpy para la estructura completa (puede fallar si la estructura contiene "padding"),
   // hacerlo a mano: un memcpy para cada campo de la estructura, uno a uno, en el mismo orden en que
