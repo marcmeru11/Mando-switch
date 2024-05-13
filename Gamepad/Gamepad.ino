@@ -164,12 +164,13 @@ void pressButtons(){
   // joysticks
   if(left_joystick_button_pressed == LOW){
     Serial.println("LEFT_JOYSTICK");
-    NSGamepadPressButton(LEFT, &nsGamepad);
+    NSGamepadPressButton(LEFT_STICK, &nsGamepad);
   }
   if(right_joystick_button_pressed == LOW){
     Serial.println("RIGHT_JOYSTICK");
-    NSGamepadPressButton(RIGHT, &nsGamepad);
+    NSGamepadPressButton(RIGHT_STICK, &nsGamepad);
   }
+
 
 }
 
@@ -232,11 +233,12 @@ void releaseButtons(){
 
   // joysticks
   if(left_joystick_button_pressed == HIGH){
-    NSGamepadReleaseButton(LEFT, &nsGamepad);
+    NSGamepadReleaseButton(LEFT_STICK, &nsGamepad);
   }
   if(right_joystick_button_pressed == HIGH){
-    NSGamepadReleaseButton(RIGHT, &nsGamepad);
+    NSGamepadReleaseButton(RIGHT_STICK, &nsGamepad);
   }
+
   
 }
 
@@ -314,15 +316,16 @@ void loop()
 {
   // TO DO: !Esto no esta hecho!
   // Ejemplo: si se ha pulsado el boton B, hariamos:
-  NSGamepadPressButton(B, &nsGamepad);
+  
   // Ejemplo 2: si se ha soltado el boton B, hariamos:
   // NSGamepadReleaseButton (B , &nsGamepad);
   pressedButtonsDetection();
+  
   // Nota: B, como todas las constantes y tipos, esta declarado en NSTypes.h
   // Serializamos los datos contenidos en nsGamepad para su envio
   // TO DO: Hay que completar el codigo de esta funcion
   NSProtocolSerializeNSGamepadData(nsGamepad, buffer);
-  
+
   // Enviamos el contenido del buffer
   esp32USB.write(NS_GAMEPAD_REPORT_SIZE, buffer);
   
@@ -347,7 +350,7 @@ void pressedButtonsDetection(){
   left_dir_button_pressed = digitalRead(LEFT_DIRECTION_BUTTON);
   right_dir_button_pressed = digitalRead(RIGHT_DIRECTION_BUTTON);
   down_dir_button_pressed = digitalRead(DOWN_DIRECTION_BUTTON);
-  //no detecta abajo
+  
   // gatillos
   back_left_trigger_button_pressed = digitalRead(BACK_LEFT_TRIGGER_BUTTON);
   left_trigger_button_pressed = digitalRead(LEFT_TRIGGER_BUTTON);

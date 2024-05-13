@@ -24,50 +24,51 @@ void NSProtocolDPadButtonsToByte(int up, int down, int left, int right, uint8_t 
   // TO DO
   if (up - down == 0 && right - left == 0)
   {
-    *byte = NSGAMEPAD_DPAD_CENTERED;
+    *byte =(uint8_t) NSGAMEPAD_DPAD_CENTERED;
   }
   else if (up - down == 1)
   {
     if (left - right == 0) 
     {
-      *byte = NSGAMEPAD_DPAD_UP;
+      *byte = (uint8_t)NSGAMEPAD_DPAD_UP;
     }
     else if (left)
     {
-      *byte = NSGAMEPAD_DPAD_UP_LEFT;
+      *byte = (uint8_t)NSGAMEPAD_DPAD_UP_LEFT;
     }
     else
     {
-      *byte = NSGAMEPAD_DPAD_UP_RIGHT;
+      *byte = (uint8_t)NSGAMEPAD_DPAD_UP_RIGHT;
     }
   }
   else if (down - up == 1)
   {
     if (left - right == 0)
     {
-      *byte = NSGAMEPAD_DPAD_DOWN;
+      *byte = (uint8_t)NSGAMEPAD_DPAD_DOWN;
     }
     else if (left)
     {
-      *byte = NSGAMEPAD_DPAD_DOWN_LEFT;
+      *byte = (uint8_t)NSGAMEPAD_DPAD_DOWN_LEFT;
     }
     else
     {
-      *byte = NSGAMEPAD_DPAD_DOWN_RIGHT;
+      *byte = (uint8_t)NSGAMEPAD_DPAD_DOWN_RIGHT;
     }
   }
   else if (right - left == 1)
   {
-    *byte = NSGAMEPAD_DPAD_RIGHT;
+    *byte =(uint8_t) NSGAMEPAD_DPAD_RIGHT;
   }
   else if (left - right == 1)
   {
-    *byte = NSGAMEPAD_DPAD_LEFT;
+    *byte =(uint8_t) NSGAMEPAD_DPAD_LEFT;
   }
   else
   {
-    *byte = NSGAMEPAD_DPAD_CENTERED;
+    *byte =(uint8_t) NSGAMEPAD_DPAD_CENTERED;
   }
+    
 }
 
 // Funcion que rellena los campos actionButtons y menuButtos de nsGamepad.
@@ -92,12 +93,13 @@ void NSProtocolReportDataSetButtons(tNSGamepad nsGamepad, tNSGamepadReportData *
   NSGamepadReportData->actionButtons = 0x00;
   int i;
   // Comenzamos por el primero de ellos, el Y (ver tNSButtons de NSTypes.h)
-  for(i=0; i<=ZR; i++){
+  for(i=0; i<ZR; i++){
+
     NSGamepadReportData->actionButtons = NSGamepadReportData->actionButtons | (uint8_t)nsGamepad.buttonsPressed[i]<<i;
   }
 
 
-  // TO DO: Hacer el resto!+
+  // TO DO: Hacer el resto!
   // (Requiere uso de mascaras / desplazamientos logicos)
   // ¿Se puede generalizar usando un bucle?
 
@@ -107,7 +109,8 @@ void NSProtocolReportDataSetButtons(tNSGamepad nsGamepad, tNSGamepadReportData *
   // Inicializamos a 0
 
   NSGamepadReportData->menuButtons = 0x00;
-  for(i=MINUS; i<=PLUS; i++){
+  for(i=MINUS; i<=UP; i++){
+
     NSGamepadReportData->menuButtons = NSGamepadReportData->menuButtons | (uint8_t)nsGamepad.buttonsPressed[i]<<i;
   }
 
@@ -118,14 +121,13 @@ void NSProtocolReportDataSetButtons(tNSGamepad nsGamepad, tNSGamepadReportData *
 
 
   NSGamepadReportData->dPad= 0x00;
-  
+  uint8_t *byte;
+  byte=&NSGamepadReportData->dPad;
+  NSProtocolDPadButtonsToByte(nsGamepad.buttonsPressed[UP] ,nsGamepad.buttonsPressed[DOWN] , nsGamepad.buttonsPressed[LEFT], nsGamepad.buttonsPressed[RIGHT],byte);
+
+
   //LE PASA EL ESTADO DE LOS BOTONES DEL DPAD, Y LUEGO LE PASA UN PUNTERO A DONDE TIENE QUE ESCRIBIR
   //NSProtocolDPadButtonsToByte(nsGamepad.buttonsPressed[UP] ,nsGamepad.buttonsPressed[DOWN] , nsGamepad.buttonsPressed[LEFT], nsGamepad.buttonsPressed[RIGHT], *byte);
-
-  
-
-
-
 
 }
 
@@ -158,19 +160,11 @@ void NSProtocolSerializeNSGamepadData(tNSGamepad nsGamepad, uint8_t buffer[NS_GA
   // Botones de accion y de menu:
   NSProtocolReportDataSetButtons(nsGamepad, &NSGamepadReportData);
   // TO DO: Hacer el resto de campos de NSGamepadReportData!
-  /*uint8_t actionButtons;
-  uint8_t menuButtons;
-  uint8_t dPad;
-  uint8_t leftXAxis;
-  uint8_t leftYAxis;
-  uint8_t rightXAxis;
-  uint8_t rightYAxis;
-  uint8_t filler;
-  */
-  //NSProtocolReportDataSetButtons
+
   // Finalmente, serializamos tHID_NSGamepadReportData (metemos los datos en el buffer).
   // TO DO: NO usar memcpy para la estructura completa (puede fallar si la estructura contiene "padding"),
   // hacerlo a mano: un memcpy para cada campo de la estructura, uno a uno, en el mismo orden en que
   // estan definidos en ella (que es el orden que establece el protocolo de la Nintendo Switch).
+
   memcpy(buffer, &NSGamepadReportData, NS_GAMEPAD_REPORT_SIZE);
 }

@@ -1,15 +1,14 @@
 #include "NSGamepad.h"
 
+
 void NSGamepadPressButton (tNSButtons buttonIndex , tNSGamepad* NSGamepad) {
 
   NSGamepad->buttonsPressed[buttonIndex] = PRESSED;
-
 }
 
 void NSGamepadReleaseButton (tNSButtons buttonIndex , tNSGamepad* NSGamepad) {
 
   NSGamepad->buttonsPressed[buttonIndex] = NOT_PRESSED;
-
 }
 
 void NSGamepadReleaseAllButtons (tNSGamepad* NSGamepad) {
@@ -23,7 +22,3 @@ void NSGamepadReleaseAllButtons (tNSGamepad* NSGamepad) {
 }
 
 // TO DO: Resto de botones y funcionalidades
-
-
-
-
