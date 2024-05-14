@@ -93,7 +93,7 @@ void NSProtocolReportDataSetButtons(tNSGamepad nsGamepad, tNSGamepadReportData *
   NSGamepadReportData->actionButtons = 0x00;
   int i;
   // Comenzamos por el primero de ellos, el Y (ver tNSButtons de NSTypes.h)
-  for(i=0; i<ZR; i++){
+  for(i=0; i<=ZR; i++){
 
     NSGamepadReportData->actionButtons = NSGamepadReportData->actionButtons | (uint8_t)nsGamepad.buttonsPressed[i]<<i;
   }
@@ -109,9 +109,9 @@ void NSProtocolReportDataSetButtons(tNSGamepad nsGamepad, tNSGamepadReportData *
   // Inicializamos a 0
 
   NSGamepadReportData->menuButtons = 0x00;
-  for(i=MINUS; i<=UP; i++){
+  for(i=MINUS; i<=CAPTURE; i++){
 
-    NSGamepadReportData->menuButtons = NSGamepadReportData->menuButtons | (uint8_t)nsGamepad.buttonsPressed[i]<<i;
+    NSGamepadReportData->menuButtons = NSGamepadReportData->menuButtons | (uint8_t)nsGamepad.buttonsPressed[i]<<i-MINUS;
   }
 
   // TO DO: Hacerlos todos, igual que hicimos los de accion
@@ -128,6 +128,12 @@ void NSProtocolReportDataSetButtons(tNSGamepad nsGamepad, tNSGamepadReportData *
 
   //LE PASA EL ESTADO DE LOS BOTONES DEL DPAD, Y LUEGO LE PASA UN PUNTERO A DONDE TIENE QUE ESCRIBIR
   //NSProtocolDPadButtonsToByte(nsGamepad.buttonsPressed[UP] ,nsGamepad.buttonsPressed[DOWN] , nsGamepad.buttonsPressed[LEFT], nsGamepad.buttonsPressed[RIGHT], *byte);
+
+
+  NSGamepadReportData->leftXAxis=(uint8_t)nsGamepad.joyStickPos[LEFTX];
+  NSGamepadReportData->leftYAxis=(uint8_t)nsGamepad.joyStickPos[LEFTY];
+  NSGamepadReportData->rightXAxis=(uint8_t)nsGamepad.joyStickPos[RIGHTX];
+  NSGamepadReportData->rightYAxis=(uint8_t)nsGamepad.joyStickPos[RIGHTY];
 
 }
 

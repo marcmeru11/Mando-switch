@@ -118,13 +118,22 @@ typedef enum {
   RESERVED_LAST_BUTTON_UNUSED
 } tNSButtons;
 
+typedef enum {
+  RIGHTY=0, 
+  RIGHTX,
+  LEFTY,
+  LEFTX,
+  AUX
+
+} tNSJoySticks;
+
 // TO DO: Completar
 typedef struct {
 
   tNSButtonState buttonsPressed[RESERVED_LAST_BUTTON_UNUSED];
 
   // Definir el resto de campos utiles
-
+  int joyStickPos[AUX];
 
 
 

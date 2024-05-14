@@ -64,12 +64,12 @@ const int BACK_RIGHT_TRIGGER_BUTTON = 9;
 const int RIGHT_TRIGGER_BUTTON = 10;
 
 // JOYSTICKS
-const int RIGHT_JOYSTICK_Y_AXIS = 4;
-const int RIGHT_JOYSTICK_X_AXIS = 5;
+const int RIGHT_JOYSTICK_Y_AXIS = 5;
+const int RIGHT_JOYSTICK_X_AXIS = 4;
 const int RIGHT_JOYSTICK_BUTTON = 6;
 
-const int LEFT_JOYSTICK_Y_AXIS = 1;
-const int LEFT_JOYSTICK_X_AXIS = 2;
+const int LEFT_JOYSTICK_Y_AXIS = 2;
+const int LEFT_JOYSTICK_X_AXIS = 1;
 const int LEFT_JOYSTICK_BUTTON = 42;
 
 // estados;
@@ -267,12 +267,12 @@ void declarePinModes(){
   pinMode(RIGHT_TRIGGER_BUTTON, INPUT_PULLUP);
 
   // joysticks
-  pinMode(RIGHT_JOYSTICK_Y_AXIS, INPUT_PULLUP);
-  pinMode(RIGHT_JOYSTICK_X_AXIS, INPUT_PULLUP);
+  //pinMode(RIGHT_JOYSTICK_Y_AXIS, INPUT_PULLUP);
+  //pinMode(RIGHT_JOYSTICK_X_AXIS, INPUT_PULLUP);
   pinMode(RIGHT_JOYSTICK_BUTTON, INPUT_PULLUP);
 
-  pinMode(LEFT_JOYSTICK_Y_AXIS, INPUT_PULLUP);
-  pinMode(LEFT_JOYSTICK_X_AXIS, INPUT_PULLUP);
+  //pinMode(LEFT_JOYSTICK_Y_AXIS, INPUT_PULLUP);
+  //pinMode(LEFT_JOYSTICK_X_AXIS, INPUT_PULLUP);
   pinMode(LEFT_JOYSTICK_BUTTON, INPUT_PULLUP);
 }
 
@@ -304,7 +304,7 @@ void setup()
 {
 
   Serial.begin(9600);
-
+  
   NSGamepadReleaseAllButtons(&nsGamepad);
   declarePinModes();
   esp32USB.begin();
@@ -320,7 +320,14 @@ void loop()
   // Ejemplo 2: si se ha soltado el boton B, hariamos:
   // NSGamepadReleaseButton (B , &nsGamepad);
   pressedButtonsDetection();
-  
+
+
+  NSGamepadUpdateJoySticks(LEFTX, 4095 -analogRead(LEFT_JOYSTICK_X_AXIS),&nsGamepad );
+  NSGamepadUpdateJoySticks(LEFTY, analogRead(LEFT_JOYSTICK_Y_AXIS),&nsGamepad );
+  NSGamepadUpdateJoySticks(RIGHTX, 4095 -analogRead(RIGHT_JOYSTICK_X_AXIS),&nsGamepad );
+  NSGamepadUpdateJoySticks(RIGHTY, analogRead(RIGHT_JOYSTICK_Y_AXIS),&nsGamepad );
+  //printf("%d,%d\n",analogRead(LEFT_JOYSTICK_X_AXIS)*100/4095, analogRead(LEFT_JOYSTICK_Y_AXIS)*100/4095);
+  //printf("%d,%d\n---------\n",analogRead(RIGHT_JOYSTICK_X_AXIS)*100/4095, analogRead(RIGHT_JOYSTICK_Y_AXIS)*100/4095);
   // Nota: B, como todas las constantes y tipos, esta declarado en NSTypes.h
   // Serializamos los datos contenidos en nsGamepad para su envio
   // TO DO: Hay que completar el codigo de esta funcion
