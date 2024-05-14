@@ -28,5 +28,9 @@ void NSGamepadReleaseAllButtons (tNSGamepad* NSGamepad) {
 // TO DO: Resto de botones y funcionalidades
 
 void NSGamepadUpdateJoySticks(tNSJoySticks axis, int pos,tNSGamepad* NSGamepad){
-  NSGamepad->joyStickPos[axis] = ((pos*255)/4095);
+  if (pos > 1948 && pos < 2148){
+    NSGamepad->joyStickPos[axis] = 128;
+  } else {
+    NSGamepad->joyStickPos[axis] = ((pos*255)/4095);
+  }
 }

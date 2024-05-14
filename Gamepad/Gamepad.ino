@@ -326,8 +326,7 @@ void loop()
   NSGamepadUpdateJoySticks(LEFTY, analogRead(LEFT_JOYSTICK_Y_AXIS),&nsGamepad );
   NSGamepadUpdateJoySticks(RIGHTX, 4095 -analogRead(RIGHT_JOYSTICK_X_AXIS),&nsGamepad );
   NSGamepadUpdateJoySticks(RIGHTY, analogRead(RIGHT_JOYSTICK_Y_AXIS),&nsGamepad );
-  //printf("%d,%d\n",analogRead(LEFT_JOYSTICK_X_AXIS)*100/4095, analogRead(LEFT_JOYSTICK_Y_AXIS)*100/4095);
-  //printf("%d,%d\n---------\n",analogRead(RIGHT_JOYSTICK_X_AXIS)*100/4095, analogRead(RIGHT_JOYSTICK_Y_AXIS)*100/4095);
+  //printf("%d,%d\n%d,%d\n---------\n",analogRead(LEFT_JOYSTICK_X_AXIS), analogRead(LEFT_JOYSTICK_Y_AXIS),analogRead(RIGHT_JOYSTICK_X_AXIS), analogRead(RIGHT_JOYSTICK_Y_AXIS));
   // Nota: B, como todas las constantes y tipos, esta declarado en NSTypes.h
   // Serializamos los datos contenidos en nsGamepad para su envio
   // TO DO: Hay que completar el codigo de esta funcion
@@ -337,7 +336,7 @@ void loop()
   esp32USB.write(NS_GAMEPAD_REPORT_SIZE, buffer);
   
 
-  delay(100);
+  delay(30);
 }
 
 void pressedButtonsDetection(){
