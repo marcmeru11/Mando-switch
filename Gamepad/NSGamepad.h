@@ -11,7 +11,4 @@ void NSGamepadReleaseAllButtons (tNSGamepad* NSGamepad);
 
 void NSGamepadUpdateJoySticks(tNSJoySticks axis, int pos,tNSGamepad* NSGamepad);
 
-
-// TO DO: Resto de botones y funcionalidades
-
 #endif // NSGAMEPAD_H_

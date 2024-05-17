@@ -1,25 +1,3 @@
-/*
-MIT License
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-*/
-
 #include "ESP32USB.h"
 
 extern "C"
@@ -32,6 +10,13 @@ ESP32USB esp32USB;
 
 // Gamepad
 tNSGamepad nsGamepad;
+
+//Constantes mandop
+const int MAX_JOYSTICK_VALUE = 4095;
+const int JOYSTICK_TRANSFER_BITS = 255;
+const int JOYSTICK_MEDIUM_VALUE = 128;
+const int ASSISTANCE_VALUE = 10;
+
 // Datos del gamepad serializados para su envio
 uint8_t buffer[NS_GAMEPAD_REPORT_SIZE];
 
@@ -86,88 +71,88 @@ int back_left_trigger_button_pressed, left_trigger_button_pressed, back_right_tr
 
 // joysticks
 int left_joystick_button_pressed, right_joystick_button_pressed;
-int left_joystick_x_axis, left_joystick_y_axis, right_joystick_x_axis, right_joystick_y_axis;
+int left_x, left_y, right_x, right_y;
 
 
 void pressButtons(){
   if(b_button_pressed == LOW){
-    Serial.println("B");
+    //Serial.println("B");
     NSGamepadPressButton(B, &nsGamepad);
   }
   if(a_button_pressed == LOW){
-    Serial.println("A");
+    //Serial.println("A");
     NSGamepadPressButton(A, &nsGamepad);
   }
   if(y_button_pressed == LOW){
-    Serial.println("Y");
+    //Serial.println("Y");
     NSGamepadPressButton(Y, &nsGamepad);
   }
   if(x_button_pressed == LOW){
-    Serial.println("X");
+    //Serial.println("X");
     NSGamepadPressButton(X, &nsGamepad);
   }
 
   // EXTRAS
   if(minus_button_pressed == LOW){
-    Serial.println("MINUS");
+    //Serial.println("MINUS");
     NSGamepadPressButton(MINUS, &nsGamepad);
   }
   if(back_button_pressed == LOW){
-    Serial.println("BACK");
+    //Serial.println("BACK");
     NSGamepadPressButton(CAPTURE, &nsGamepad);
   }
   if(plus_button_pressed == LOW){
-    Serial.println("PLUS");
+    //Serial.println("PLUS");
     NSGamepadPressButton(PLUS, &nsGamepad);
   }
   if(home_button_pressed == LOW){
-    Serial.println("HOME");
+    //Serial.println("HOME");
     NSGamepadPressButton(HOME, &nsGamepad);
   }
 
   // cruceta
   if(up_dir_button_pressed == LOW){
-    Serial.println("UP");
+    //Serial.println("UP");
     NSGamepadPressButton(UP, &nsGamepad);
   }
   if(left_dir_button_pressed == LOW){
-    Serial.println("LEFT");
+    //Serial.println("LEFT");
     NSGamepadPressButton(LEFT, &nsGamepad);
   }
   if(right_dir_button_pressed == LOW){
-    Serial.println("RIGHT");
+    //Serial.println("RIGHT");
     NSGamepadPressButton(RIGHT, &nsGamepad);
   }
   if(down_dir_button_pressed == LOW){
-    Serial.println("DOWN");
+    //Serial.println("DOWN");
     NSGamepadPressButton(DOWN, &nsGamepad);
   }
 
   // gatillos
   if(back_left_trigger_button_pressed == LOW){
-    Serial.println("BACK_LEFT_TRIGGER");
+    //Serial.println("BACK_LEFT_TRIGGER");
     NSGamepadPressButton(ZL, &nsGamepad);
   }
   if(left_trigger_button_pressed == LOW){
-    Serial.println("LEFT_TRIGGER");
+    //Serial.println("LEFT_TRIGGER");
     NSGamepadPressButton(L, &nsGamepad);
   }
   if(back_right_trigger_button_pressed == LOW){
-    Serial.println("BACK_RIGHT_TRIGGER");
+    //Serial.println("BACK_RIGHT_TRIGGER");
     NSGamepadPressButton(ZR, &nsGamepad);
   }
   if(right_trigger_button_pressed == LOW){
-    Serial.println("RIGHT_TRIGGER");
+    //Serial.println("RIGHT_TRIGGER");
     NSGamepadPressButton(R, &nsGamepad);
   }
 
   // joysticks
   if(left_joystick_button_pressed == LOW){
-    Serial.println("LEFT_JOYSTICK");
+    //Serial.println("LEFT_JOYSTICK");
     NSGamepadPressButton(LEFT_STICK, &nsGamepad);
   }
   if(right_joystick_button_pressed == LOW){
-    Serial.println("RIGHT_JOYSTICK");
+    //Serial.println("RIGHT_JOYSTICK");
     NSGamepadPressButton(RIGHT_STICK, &nsGamepad);
   }
 
@@ -267,12 +252,7 @@ void declarePinModes(){
   pinMode(RIGHT_TRIGGER_BUTTON, INPUT_PULLUP);
 
   // joysticks
-  //pinMode(RIGHT_JOYSTICK_Y_AXIS, INPUT_PULLUP);
-  //pinMode(RIGHT_JOYSTICK_X_AXIS, INPUT_PULLUP);
   pinMode(RIGHT_JOYSTICK_BUTTON, INPUT_PULLUP);
-
-  //pinMode(LEFT_JOYSTICK_Y_AXIS, INPUT_PULLUP);
-  //pinMode(LEFT_JOYSTICK_X_AXIS, INPUT_PULLUP);
   pinMode(LEFT_JOYSTICK_BUTTON, INPUT_PULLUP);
 }
 
@@ -288,16 +268,14 @@ void handshake()
     NSProtocolSerializeNSGamepadData(nsGamepad, buffer);
     // Enviamos el contenido del buffer
     esp32USB.write(NS_GAMEPAD_REPORT_SIZE, buffer);
-    delay(100);
+    delay(50);
     NSGamepadReleaseButton(Y, &nsGamepad);
     // Serializamos
     NSProtocolSerializeNSGamepadData(nsGamepad, buffer);
     // Enviamos el contenido del buffer
     esp32USB.write(NS_GAMEPAD_REPORT_SIZE, buffer);
-    delay(100);
+    delay(50);
   }
-
-  Serial.println("Saludo terminado");
 }
 
 void setup()
@@ -321,25 +299,38 @@ void loop()
   // NSGamepadReleaseButton (B , &nsGamepad);
   pressedButtonsDetection();
 
+  int* leftJoyStick = (int*)malloc(2*sizeof(int));
+  leftJoyStick[0] = MAX_JOYSTICK_VALUE - analogRead(LEFT_JOYSTICK_X_AXIS);
+  leftJoyStick[1] = analogRead(LEFT_JOYSTICK_Y_AXIS);
+  set256bits(leftJoyStick);
+  leftJoyStick = joyStickAssistance(leftJoyStick);
 
-  NSGamepadUpdateJoySticks(LEFTX, 4095 -analogRead(LEFT_JOYSTICK_X_AXIS),&nsGamepad );
-  NSGamepadUpdateJoySticks(LEFTY, analogRead(LEFT_JOYSTICK_Y_AXIS),&nsGamepad );
-  NSGamepadUpdateJoySticks(RIGHTX, 4095 -analogRead(RIGHT_JOYSTICK_X_AXIS),&nsGamepad );
-  NSGamepadUpdateJoySticks(RIGHTY, analogRead(RIGHT_JOYSTICK_Y_AXIS),&nsGamepad );
-  //printf("%d,%d\n%d,%d\n---------\n",analogRead(LEFT_JOYSTICK_X_AXIS), analogRead(LEFT_JOYSTICK_Y_AXIS),analogRead(RIGHT_JOYSTICK_X_AXIS), analogRead(RIGHT_JOYSTICK_Y_AXIS));
-  // Nota: B, como todas las constantes y tipos, esta declarado en NSTypes.h
+  int* rightJoyStick = (int*)malloc(2*sizeof(int));
+  rightJoyStick[0] = MAX_JOYSTICK_VALUE - analogRead(RIGHT_JOYSTICK_X_AXIS);
+  rightJoyStick[1] = analogRead(RIGHT_JOYSTICK_Y_AXIS);
+  set256bits(rightJoyStick);
+  rightJoyStick = joyStickAssistance(rightJoyStick);
+
+  NSGamepadUpdateJoySticks(LEFTX, leftJoyStick[0], &nsGamepad );
+  NSGamepadUpdateJoySticks(LEFTY, leftJoyStick[1], &nsGamepad );
+  NSGamepadUpdateJoySticks(RIGHTX, rightJoyStick[0], &nsGamepad );
+  NSGamepadUpdateJoySticks(RIGHTY, rightJoyStick[1], &nsGamepad );
+  Serial.printf("\n%d, %d // %d, %d", leftJoyStick[0], leftJoyStick[1], rightJoyStick[0], rightJoyStick[1]);
+
   // Serializamos los datos contenidos en nsGamepad para su envio
-  // TO DO: Hay que completar el codigo de esta funcion
   NSProtocolSerializeNSGamepadData(nsGamepad, buffer);
 
   // Enviamos el contenido del buffer
   esp32USB.write(NS_GAMEPAD_REPORT_SIZE, buffer);
   
+  free(leftJoyStick);
+  free(rightJoyStick);
 
-  delay(30);
+  delay(20);
 }
 
 void pressedButtonsDetection(){
+  //ABXY
   b_button_pressed = digitalRead(B_BUTTON);
   a_button_pressed = digitalRead(A_BUTTON);
   y_button_pressed = digitalRead(Y_BUTTON);
@@ -367,10 +358,24 @@ void pressedButtonsDetection(){
   left_joystick_button_pressed = digitalRead(LEFT_JOYSTICK_BUTTON);
   right_joystick_button_pressed = digitalRead(RIGHT_JOYSTICK_BUTTON);
 
-
-
   pressButtons();
   releaseButtons();
+}
 
+void set256bits(int* result){
+  result[0] = map(result[0], 0, MAX_JOYSTICK_VALUE, 0, JOYSTICK_TRANSFER_BITS);
+  result[1] = map(result[1], 0, MAX_JOYSTICK_VALUE, 0, JOYSTICK_TRANSFER_BITS);
+}
 
+int* joyStickAssistance(int* result) {
+  int x_centered = 0;
+  int y_centered = 0;
+
+  if (result[0] >= (JOYSTICK_MEDIUM_VALUE - ASSISTANCE_VALUE) && result[0] <= (JOYSTICK_MEDIUM_VALUE + ASSISTANCE_VALUE)){
+    result[0] = JOYSTICK_MEDIUM_VALUE;
+  }
+  if (result[1] >= (JOYSTICK_MEDIUM_VALUE - ASSISTANCE_VALUE) && result[1] <= (JOYSTICK_MEDIUM_VALUE + ASSISTANCE_VALUE) ){
+    result[1] = JOYSTICK_MEDIUM_VALUE;
+  }
+  return result;
 }
